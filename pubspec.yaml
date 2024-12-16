@@ -1,7 +1,8 @@
 name: fast_image_compress
-description: "A new Flutter plugin project."
+description: "A Flutter plugin that allows you to compress images easily and quickly."
 version: 0.0.1
-homepage:
+homepage: "https://github.com/SimformSolutionsPvtLtd/fast_image_compress"
+issue_tracker: "https://github.com/SimformSolutionsPvtLtd/fast_image_compress/issues"
 
 environment:
   sdk: ^3.5.3
@@ -12,10 +13,12 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  pana:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
