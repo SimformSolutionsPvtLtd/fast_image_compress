@@ -3,6 +3,12 @@ description: "A Flutter plugin that allows you to compress images easily and qui
 version: 0.0.1
 homepage: "https://github.com/SimformSolutionsPvtLtd/fast_image_compress"
 issue_tracker: "https://github.com/SimformSolutionsPvtLtd/fast_image_compress/issues"
+topics:
+  - image-compression
+  - image-processing
+  - parallel-processing
+  - image
+  - compression
 
 environment:
   sdk: ^3.5.3
