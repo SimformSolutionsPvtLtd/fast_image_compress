@@ -20,9 +20,16 @@
  * SOFTWARE.
  */
 
-library fast_image_compress;
-
-export 'src/fast_image_compress.dart';
-export 'src/image_compression_service.dart';
-export 'src/fast_image_compress/fast_image_compress_method_channel.dart';
-export 'src/fast_image_compress/fast_image_compress_platform_interface.dart';
+class Constants {
+  const Constants._();
+  static const String methodChannelName =
+      'com.simform.fast_image_compress/compression';
+  static const String compressImageMethodName = 'compressImage';
+  static const String cancelCompressionMethodName = 'cancelCompression';
+  static const String imageData = 'imageData';
+  static const String quality = 'quality';
+  static const String compressionQuality = 'compressionQuality';
+  static const String targetWidth = 'targetWidth';
+  static const String imageQuality = 'imageQuality';
+  static const String port = 'port';
+}
