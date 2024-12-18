@@ -28,10 +28,10 @@ class CompressionExamplePage extends StatefulWidget {
   const CompressionExamplePage({super.key});
 
   @override
-  _CompressionExamplePageState createState() => _CompressionExamplePageState();
+  CompressionExamplePageState createState() => CompressionExamplePageState();
 }
 
-class _CompressionExamplePageState extends State<CompressionExamplePage> {
+class CompressionExamplePageState extends State<CompressionExamplePage> {
   final FastImageCompress fastImageCompress = FastImageCompress();
   final ImagePicker _imagePicker = ImagePicker();
   List<Uint8List>? _originalImageList;

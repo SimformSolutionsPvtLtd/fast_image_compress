@@ -79,8 +79,8 @@ class FastImageCompress {
     ImageQuality imageQuality = ImageQuality.medium,
   }) {
     assert(
-    quality > 0 || quality < 100,
-    'quality value should be between 0 to 100',
+      quality > 0 || quality < 100,
+      'quality value should be between 0 to 100',
     );
     if (targetWidth != null) {
       assert(targetWidth > 1, "targetWidth can't be less than 1");
