@@ -1,3 +1,6 @@
+![Fast Image Compress - Simform LLC.](https://raw.githubusercontent.com/SimformSolutionsPvtLtd/fast_image_compress/master/preview/banner.png)
+
+
 # fast_image_compress
 
 [![pub package](https://img.shields.io/pub/v/fast_image_compress.svg)](https://pub.dartlang.org/packages/fast_image_compress)
