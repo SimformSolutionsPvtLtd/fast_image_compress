@@ -151,6 +151,13 @@ Only support iOS 11+.
 Only support API 28+.
 
 Note: Requires hardware encoder support, so availability is not guaranteed on all devices running API 28 or higher.
+## Main Contributors
+
+<table>
+  <tr>
+     <td align="center"><a href="https://github.com/rashi-shah"><img src="https://avatars.githubusercontent.com/u/69202025?v=4?s=100" width="100px;" alt=""/><br/><sub><b>Rashi Shah</b></sub></a></td>
+  </tr>
+</table>
 
 ## License
 
