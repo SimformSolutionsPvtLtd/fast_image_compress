@@ -142,6 +142,23 @@ Only support API 28+.
 
 Note: Requires hardware encoder support, so availability is not guaranteed on all devices running API 28 or higher.
 
+## Why fast_image_compress
+
+The following bar graph demonstrates the efficiency of our plugin compared to two other existing packages. 
+The comparison was conducted by compressing one image at a time for various image sizes, measuring the time taken in milliseconds (Y-axis) against the image size in MB (X-axis).
+
+Plugin versions used in the comparison:
+fast_image_compress: 0.0.2
+flutter_image_compress: 1.1.3
+image_compression_flutter: 1.0.3
+
+Below are the comparison graphs:
+
+![Android Comparison Graph](https://raw.githubusercontent.com/SimformSolutionsPvtLtd/fast_image_compress/master/preview/android_comparison_graph.png)
+![iOS Comparison Graph](https://raw.githubusercontent.com/SimformSolutionsPvtLtd/fast_image_compress/master/preview/iOS_comparison_graph.png)
+
+This visual representation highlights the better performance of our plugin in terms of compression speed and efficiency across different image sizes.
+
 ## License
 
 ```
