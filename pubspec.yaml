@@ -1,6 +1,6 @@
 name: fast_image_compress
 description: "A Flutter plugin that allows you to compress images easily and quickly."
-version: 0.0.2
+version: 0.0.3
 homepage: "https://github.com/SimformSolutionsPvtLtd/fast_image_compress"
 issue_tracker: "https://github.com/SimformSolutionsPvtLtd/fast_image_compress/issues"
 topics:
