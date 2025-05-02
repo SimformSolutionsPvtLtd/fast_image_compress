@@ -31,5 +31,6 @@ class Constants {
   static const String compressionQuality = 'compressionQuality';
   static const String targetWidth = 'targetWidth';
   static const String imageQuality = 'imageQuality';
+  static const String imageFormat = 'imageFormat';
   static const String port = 'port';
 }

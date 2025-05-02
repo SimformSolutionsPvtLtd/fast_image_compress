@@ -6,7 +6,10 @@ object Constants {
     const val TARGET_WIDTH: String = "targetWidth"
     const val COMPRESSION_QUALITY: String = "compressionQuality"
     const val IMAGE_QUALITY: String = "imageQuality"
+    const val IMAGE_FORMAT: String = "imageFormat"
     const val IMAGE_QUALITY_HIGH: String = "high"
     const val IMAGE_QUALITY_LOW: String = "low"
     const val IMAGE_QUALITY_MEDIUM: String = "medium"
+    const val FORMAT_JPEG: String = "jpeg"
+    const val FORMAT_PNG: String = "png"
 }

@@ -32,9 +32,12 @@ enum Constants{
     static let targetWidth = "targetWidth"
     static let compressionQuality = "compressionQuality"
     static let imageQuality = "imageQuality"
+    static let imageFormat = "imageFormat"
     static let high = "high"
     static let low = "low"
     static let medium = "medium"
+    static let formatJPEG = "jpeg"
+    static let formatPNG = "png"
 }
 
 // Enum to represent image quality levels and their associated downscaling factors
@@ -88,6 +91,8 @@ public class FastImageCompressPlugin: NSObject, FlutterPlugin {
         // Optional arguments for compression quality and target width
         let compressionQuality = args[Constants.compressionQuality] as? Int
         let targetWidth = args[Constants.targetWidth] as? Int
+        // Get the desired output image format, default to JPEG
+        let imageFormat = args[Constants.imageFormat] as? String ?? Constants.formatJPEG
 
         // Determine the image quality based on the provided string
         let imageQuality: ImageQuality = {
@@ -100,7 +105,7 @@ public class FastImageCompressPlugin: NSObject, FlutterPlugin {
 
         isCancelled = false // Reset cancellation flag
         // Start resizing and compressing the image
-        resizeImage(imageData: imageData.data, targetWidth: targetWidth, compressionQuality: compressionQuality, imageQuality: imageQuality, result: result)
+        resizeImage(imageData: imageData.data, targetWidth: targetWidth, compressionQuality: compressionQuality, imageQuality: imageQuality, imageFormat: imageFormat, result: result)
     }
 
     // Handles the cancellation of image compression
@@ -112,7 +117,7 @@ public class FastImageCompressPlugin: NSObject, FlutterPlugin {
     // MARK: - Image Processing
 
     // Resizes the image and compresses it based on the provided parameters
-    private func resizeImage(imageData: Data, targetWidth: Int?, compressionQuality: Int? = 80, imageQuality: ImageQuality, result: FlutterResult) {
+    private func resizeImage(imageData: Data, targetWidth: Int?, compressionQuality: Int? = 80, imageQuality: ImageQuality, imageFormat: String, result: @escaping FlutterResult) {
         // Decode the image data into a UIImage
         guard let image = UIImage(data: imageData) else {
             result(FlutterError(code: "INVALID_IMAGE", message: "Unable to decode image data", details: nil))
@@ -127,7 +132,7 @@ public class FastImageCompressPlugin: NSObject, FlutterPlugin {
         }
 
         // Compress the resized image
-        compressImage(finalImage: finalImage, imageData: imageData, compressionQuality: compressionQuality, result: result)
+        compressImage(finalImage: finalImage, imageData: imageData, compressionQuality: compressionQuality, imageFormat: imageFormat, result: result)
     }
 
     // Resizes the image to the target width and quality
@@ -154,17 +159,23 @@ public class FastImageCompressPlugin: NSObject, FlutterPlugin {
     }
 
     // Compresses the resized image and returns the compressed data
-    private func compressImage(finalImage: UIImage, imageData: Data, compressionQuality: Int?, result: FlutterResult) {
-        var quality = Double(compressionQuality ?? 80) / 100.0 // Default quality is 80%
-        var compressedData = finalImage.jpegData(compressionQuality: quality)
-
+    private func compressImage(finalImage: UIImage, imageData: Data, compressionQuality: Int?, imageFormat: String, result: FlutterResult) {
+        let quality = Double(compressionQuality ?? 60) / 100.0 // Default quality is 80%
         let inputImageSize = imageData.count
-        var outputImageSize = compressedData?.count ?? Int.max
-
-        //  To avoid increasing the size of an already compressed image, compare
-        //  input and output sizes, and use lower compression quality if needed.
-        if outputImageSize > inputImageSize {
-            compressedData = performIterativeCompression(finalImage: finalImage, inputImageSize: inputImageSize, initialQuality: quality)
+        var compressedData: Data?
+        
+        // Generate compressed data based on the requested format
+        if imageFormat == Constants.formatPNG {
+            compressedData = finalImage.pngData()
+        } else {
+            // Default to JPEG
+            compressedData = finalImage.jpegData(compressionQuality: quality)
+            
+            // For JPEG, we can try iterative compression if the output size is larger than input
+            let outputImageSize = compressedData?.count ?? Int.max
+            if outputImageSize > inputImageSize {
+                compressedData = performIterativeCompression(finalImage: finalImage, inputImageSize: inputImageSize, initialQuality: quality)
+            }
         }
 
         // Return the compressed data or an error if compression failed

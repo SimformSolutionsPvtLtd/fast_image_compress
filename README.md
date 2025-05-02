@@ -64,6 +64,7 @@ Future<Uint8List> compressImage(Uint8List imageData) async {
     quality: 60,
     targetWidth: 400,
     imageQuality: ImageQuality.low,
+    imageFormat: ImageFormat.jpeg, 
   );
   return compressedImage;
 }
@@ -76,6 +77,7 @@ Future<List<Uint8List>> compressMultipleImages(List<Uint8List> imageList) async 
     targetWidth: 800,
     batchSize: 3,
     imageQuality: ImageQuality.low,
+    imageFormat: ImageFormat.jpeg,
   );
   return result;
 }
@@ -88,21 +90,13 @@ Future<void> _cancelCompression() async {
 ```
 ## Parameters of `compressImage` function:
 
-| Parameter Name | Data type    | Default Value       | Description                                         |
-|----------------|--------------|---------------------|-----------------------------------------------------|
-| imageData      | Uint8List    | -                   | The image to be compressed                          |
-| quality        | int          | 60                  | The compression quality percentage                  |
-| targetWidth    | int?         | null                | The desired width for the compressed image          |
-| imageQuality   | ImageQuality | ImageQuality.medium | The quality of the image to store after compression |
-
-## Parameters of `compressImage` function:
-
 | Parameter Name | Data type    | Default Value       | Description                                               |
 |----------------|--------------|---------------------|-----------------------------------------------------------|
 | imageData      | Uint8List    | -                   | The image to be compressed                                |
 | quality        | int          | 60                  | The compression quality percentage                        |
 | targetWidth    | int?         | null                | The desired width for the compressed image                |
 | imageQuality   | ImageQuality | ImageQuality.medium | The quality of the image to store after compression       |
+| imageFormat    | ImageFormat  | ImageFormat.jpeg    | The format of the output image (jpeg or png)              |
 | batchSize      | int          | 3                   | The number of images to process simultaneously in a batch |
 
 ## About params
@@ -113,6 +107,7 @@ The `targetWidth` parameter allows you to resize the images to a specific width.
 
 Use this parameter when you need all images to have a uniform width. It is particularly useful for optimizing image processing performance.
 Recommended to use this parameter when image size or image width is large.
+
 ### batchSize
 
 The `batchSize` parameter determines how many images are processed in a single batch.
@@ -125,12 +120,25 @@ To dynamically adjust batchSize based on the number of CPU threads available on 
 final maxAvailableCPUThreads = Platform.numberOfProcessors;
 final batchSize = maxAvailableCPUThreads > 0 ? maxAvailableCPUThreads ~/ 2 : 1;
 ```
+
+### quality
+
+Specifies the quality of the target image.
+
+Note: On iOS, quality is ignored for PNG because it's a lossless format with no adjustable compression.
+
 ### imageQuality
 
 The `imageQuality` parameter controls the quality of the processed images. It has three predefined values:
 - low
 - medium (default)
 - high
+
+### imageFormat
+
+The `imageFormat` parameter determines the output format of the compressed image:
+- `ImageFormat.jpeg` (default): Creates JPEG images with lossy compression. Better for photos and images without transparency.
+- `ImageFormat.png`: Creates PNG images with lossless compression. Preserves transparency but may result in larger file sizes.
 
 ## Android
 
