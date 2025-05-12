@@ -68,6 +68,8 @@ class FastImageCompressPlugin: FlutterPlugin, MethodCallHandler {
       val targetWidth = call.argument<Int?>(Constants.TARGET_WIDTH)
       val compressionQuality = call.argument<Int?>(Constants.COMPRESSION_QUALITY)
       val imageQualityInString = call.argument<String>(Constants.IMAGE_QUALITY)
+      // Get the desired output image format, default to JPEG
+      val imageFormat = call.argument<String>(Constants.IMAGE_FORMAT) ?: Constants.FORMAT_JPEG
 
       // Determine the image quality based on the input string
       val imageQuality =
@@ -117,7 +119,7 @@ class FastImageCompressPlugin: FlutterPlugin, MethodCallHandler {
           val resizedBitmap = resizeBitmap(correctedBitmap, targetWidth)
 
           // Compress the image and convert it to a byte array
-          val compressedBytes = bitmapToByteArray(resizedBitmap, compressionQuality)
+          val compressedBytes = bitmapToByteArray(resizedBitmap, compressionQuality, imageFormat)
           if (compressedBytes == null) {
             // Return the original image if compression fails or when compressed image
             // is larger than original image
@@ -183,26 +185,35 @@ class FastImageCompressPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   // Compress a Bitmap into a byte array
-  private fun bitmapToByteArray(bitmap: Bitmap, compressionQuality: Int? = 80): ByteArray? {
+  private fun bitmapToByteArray(bitmap: Bitmap, compressionQuality: Int? = 80, imageFormat: String = Constants.FORMAT_JPEG): ByteArray? {
     val quality = compressionQuality ?: 80
     val stream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
+    
+    // Select compression format based on imageFormat parameter
+    val compressFormat = if (imageFormat == Constants.FORMAT_PNG) {
+      Bitmap.CompressFormat.PNG
+    } else {
+      Bitmap.CompressFormat.JPEG
+    }
+    
+    bitmap.compress(compressFormat, quality, stream)
     var outputImageSize = stream.toByteArray().size
 
     //  To avoid increasing the size of an already compressed image, compare
     //  input and output sizes, and use lower compression quality if needed.
     if (outputImageSize > inputImageSize) {
-        var updatedCompQuality = quality;
-        while (outputImageSize > inputImageSize && updatedCompQuality >= 10) {
-          bitmap.compress(Bitmap.CompressFormat.JPEG, updatedCompQuality, stream)
-          updatedCompQuality = updatedCompQuality - 10;
-          outputImageSize = stream.toByteArray().size;
-        }
-        if (updatedCompQuality >= 10) {
-          return stream.toByteArray()
-        } else {
-          return null
-        }
+      var updatedCompQuality = quality
+      while (outputImageSize > inputImageSize && updatedCompQuality >= 10) {
+        stream.reset() // Clear the stream
+        bitmap.compress(Bitmap.CompressFormat.JPEG, updatedCompQuality, stream)
+        updatedCompQuality -= 10
+        outputImageSize = stream.toByteArray().size
+      }
+      if (updatedCompQuality >= 10) {
+        return stream.toByteArray()
+      } else {
+        return null
+      }
     }
     return stream.toByteArray()
   }

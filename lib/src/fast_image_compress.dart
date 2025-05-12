@@ -53,12 +53,14 @@ class FastImageCompress {
   /// data or `null` if the compression is cancelled.
   ///
   /// - [imageData]: The image data as a `Uint8List` to be compressed.
-  /// - [quality]: The compression quality percentage (default is 80).
+  /// - [quality]: The compression quality percentage (default is 60).
   ///   Must be a value between 0 and 100, where 100 represents the highest quality.
   /// - [targetWidth]: The desired width for the compressed image (default is 500).
   ///   The height will be scaled proportionally to maintain the aspect ratio.
   /// - [imageQuality]: The quality of the image to undergo compression. This can be
   ///   `ImageQuality.high`, `ImageQuality.medium`, or `ImageQuality.low` (default is `ImageQuality.medium`).
+  /// - [imageFormat]: The format of the output image. This can be `ImageFormat.jpeg` (default)
+  ///   or `ImageFormat.png`. PNG format preserves transparency but may result in larger file sizes.
   ///
   /// ### Returns:
   /// A `Future<Uint8List?>` that resolves to the compressed image data as a `Uint8List`,
@@ -77,6 +79,7 @@ class FastImageCompress {
     int quality = 60,
     int? targetWidth = 500,
     ImageQuality imageQuality = ImageQuality.medium,
+    ImageFormat imageFormat = ImageFormat.jpeg,
   }) {
     assert(
       quality > 0 || quality < 100,
@@ -95,6 +98,7 @@ class FastImageCompress {
       quality,
       targetWidth,
       imageQuality,
+      imageFormat,
     );
   }
 
@@ -105,7 +109,7 @@ class FastImageCompress {
   /// processed in parallel batches to optimize performance.
   ///
   /// - [images]: A list of `Uint8List` objects representing the images to be compressed.
-  /// - [quality]: The compression quality percentage (default is 80).
+  /// - [quality]: The compression quality percentage (default is 60).
   ///   Must be a value between 0 and 100, where 100 represents the highest quality.
   /// - [targetWidth]: The desired width for the compressed images (default is 500).
   ///   The height will be scaled proportionally to maintain the aspect ratio.
@@ -113,6 +117,8 @@ class FastImageCompress {
   ///   Must be at least 1.
   /// - [imageQuality]: The quality of the image to undergo compression. This can be
   ///   `ImageQuality.high`, `ImageQuality.medium`, or `ImageQuality.low` (default is `ImageQuality.medium`).
+  /// - [imageFormat]: The format of the output image. This can be `ImageFormat.jpeg` (default)
+  ///   or `ImageFormat.png`. PNG format preserves transparency but may result in larger file sizes.
   ///
   /// ### Returns:
   /// A `Future` that resolves to a `List<Uint8List>` containing the compressed images.
@@ -133,6 +139,7 @@ class FastImageCompress {
     int? targetWidth,
     int batchSize = 3,
     ImageQuality imageQuality = ImageQuality.medium,
+    ImageFormat imageFormat = ImageFormat.jpeg,
   }) async {
     assert(
       quality > 0 || quality < 100,
@@ -155,6 +162,7 @@ class FastImageCompress {
           quality,
           targetWidth,
           imageQuality,
+          imageFormat,
         );
         if (compressedImage != null) {
           compressedImages.add(compressedImage);

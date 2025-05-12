@@ -46,7 +46,7 @@ class ImageCompressionService {
     int quality,
     int? targetWidth,
     ImageQuality imageQuality,
-  ) async {
+      [ImageFormat imageFormat = ImageFormat.jpeg]) async {
     if (!isInitialized) await initializeIsolate();
     final responsePort = ReceivePort();
     _isolateSendPort!.send({
@@ -54,7 +54,8 @@ class ImageCompressionService {
       Constants.quality: quality,
       Constants.targetWidth: targetWidth,
       Constants.port: responsePort.sendPort,
-      Constants.imageQuality: imageQuality
+      Constants.imageQuality: imageQuality,
+      Constants.imageFormat: imageFormat.name,
     });
     return await responsePort.first as Uint8List?;
   }
@@ -75,6 +76,8 @@ class ImageCompressionService {
           final targetWidth = message[Constants.targetWidth] as int?;
           final responsePort = message[Constants.port] as SendPort;
           final imageQuality = message[Constants.imageQuality] as ImageQuality;
+          final imageFormat = message[Constants.imageFormat] as String? ??
+              ImageFormat.jpeg.name;
 
           Uint8List? processedImage;
           processedImage = await imageCompress(
@@ -82,6 +85,7 @@ class ImageCompressionService {
             targetWidth,
             quality,
             imageQuality.name,
+            imageFormat,
           );
 
           responsePort.send(processedImage);
@@ -97,6 +101,7 @@ class ImageCompressionService {
     int? targetWidth,
     int compressionQuality,
     String imageQuality,
+    String imageFormat,
   ) async {
     try {
       final message = {
@@ -104,6 +109,7 @@ class ImageCompressionService {
         Constants.targetWidth: targetWidth,
         Constants.compressionQuality: compressionQuality,
         Constants.imageQuality: imageQuality,
+        Constants.imageFormat: imageFormat,
       };
       final resizedImage = await platform.invokeMethod<Uint8List?>(
         Constants.compressImageMethodName,
@@ -129,4 +135,13 @@ enum ImageQuality {
   low,
   medium,
   high;
+}
+
+/// Specifies the format of the compressed image output
+enum ImageFormat {
+  /// JPEG format (default) - supports lossy compression with quality settings
+  jpeg,
+
+  /// PNG format - lossless compression that preserves transparency
+  png;
 }
